@@ -25,89 +25,135 @@ byte vibrate = 0;
 
 
 void stopAll(){
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,LOW);
+  digitalWrite(in1,LOW);
+  digitalWrite(in2,LOW);
 
-    digitalWrite(im1,LOW);
-    digitalWrite(im2,LOW);
+  digitalWrite(im1,LOW);
+  digitalWrite(im2,LOW);
 
-    digitalWrite(im3,LOW);
-    digitalWrite(im4,LOW);
+  digitalWrite(im3,LOW);
+  digitalWrite(im4,LOW);
 
-    digitalWrite(in3,LOW);
-    digitalWrite(in4,LOW);
+  digitalWrite(in3,LOW);
+  digitalWrite(in4,LOW);
 }
 
 void kanan(){
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,HIGH);
+  digitalWrite(in1,LOW);
+  digitalWrite(in2,HIGH);
 
-    digitalWrite(im1,HIGH);
-    digitalWrite(im2,LOW);
+  digitalWrite(im1,HIGH);
+  digitalWrite(im2,LOW);
 
-    digitalWrite(im3,LOW);
-    digitalWrite(im4,HIGH);
+  digitalWrite(im3,LOW);
+  digitalWrite(im4,HIGH);
 
-    digitalWrite(in3,HIGH);
-    digitalWrite(in4,LOW);
+  digitalWrite(in3,HIGH);
+  digitalWrite(in4,LOW);
 }
 
 void kiri(){
-    digitalWrite(in1,HIGH);
-    digitalWrite(in2,LOW);
+  digitalWrite(in1,HIGH);
+  digitalWrite(in2,LOW);
 
-    digitalWrite(im1,LOW);
-    digitalWrite(im2,HIGH);
+  digitalWrite(im1,LOW);
+  digitalWrite(im2,HIGH);
 
-    digitalWrite(im3,HIGH);
-    digitalWrite(im4,LOW);
+  digitalWrite(im3,HIGH);
+  digitalWrite(im4,LOW);
 
-    digitalWrite(in3,LOW);
-    digitalWrite(in4,HIGH);
+  digitalWrite(in3,LOW);
+  digitalWrite(in4,HIGH);
 }
 
 //semua motor mundur
 void mundur(){
-    digitalWrite(in1,HIGH);
-    digitalWrite(in2,LOW);
+  digitalWrite(in1,HIGH);
+  digitalWrite(in2,LOW);
 
-    digitalWrite(im1,HIGH);
-    digitalWrite(im2,LOW);
+  digitalWrite(im1,HIGH);
+  digitalWrite(im2,LOW);
 
 
-    digitalWrite(im3,LOW);
-    digitalWrite(im4,HIGH);
+  digitalWrite(im3,LOW);
+  digitalWrite(im4,HIGH);
 
-    digitalWrite(in3,LOW);
-    digitalWrite(in4,HIGH);
+  digitalWrite(in3,LOW);
+  digitalWrite(in4,HIGH);
 }
 
 //Semua motor maju
 void maju(){
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,HIGH);
+  digitalWrite(in1,LOW);
+  digitalWrite(in2,HIGH);
 
-    digitalWrite(im1,LOW);
-    digitalWrite(im2,HIGH);
+  digitalWrite(im1,LOW);
+  digitalWrite(im2,HIGH);
 
-    digitalWrite(im3,HIGH);
-    digitalWrite(im4,LOW);
+  digitalWrite(im3,HIGH);
+  digitalWrite(im4,LOW);
 
-    digitalWrite(in3,HIGH);
-    digitalWrite(in4,LOW);
+  digitalWrite(in3,HIGH);
+  digitalWrite(in4,LOW);
 }
 
 void setup() {
-    pinMode(in1,OUTPUT);
-    pinMode(in2,OUTPUT);
-    pinMode(in3,OUTPUT);
-    pinMode(in4,OUTPUT);
+  
+  psError = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
 
-    pinMode(im1,OUTPUT);
-    pinMode(im2,OUTPUT);
-    pinMode(im3,OUTPUT);
-    pinMode(im4,OUTPUT);
+  if(psError == 0){
+    Serial.print("Found Controller, configured successful ");
+    Serial.print("pressures = ");
+    if (pressures)
+        Serial.println("true ");
+    else
+        Serial.println("false");
+    Serial.print("rumble = ");
+    if (rumble)
+        Serial.println("true)");
+    else
+        Serial.println("false");
+    Serial.println("Try out all the buttons, X will vibrate the controller, faster as you press harder;");
+    Serial.println("holding L1 or R1 will print out the analog stick values.");
+    Serial.println("Note: Go to www.billporter.info for updates and to report bugs.");
+  }
+  else if(psError == 1)
+    Serial.println("No controller found, check wiring, see readme.txt to enable debug. visit www.billporter.info for troubleshooting tips");
 
+  else if(psError == 2)
+    Serial.println("Controller found but not accepting commands. see readme.txt to enable debug. Visit www.billporter.info for troubleshooting tips");
+
+  else if(psError == 3)
+    Serial.println("Controller refusing to enter Pressures mode, may not support it. ");
+
+
+  pinMode(in1,OUTPUT);
+  pinMode(in2,OUTPUT);
+  pinMode(in3,OUTPUT);
+  pinMode(in4,OUTPUT);
+
+  pinMode(im1,OUTPUT);
+  pinMode(im2,OUTPUT);
+  pinMode(im3,OUTPUT);
+  pinMode(im4,OUTPUT);
+
+  psType = ps2x.readType();
+  switch(psType) {
+      case 0:
+      Serial.print("Unknown Controller type found ");
+      break;
+      case 1:
+      Serial.print("DualShock Controller found ");
+      break;
+      case 2:
+      Serial.print("GuitarHero Controller found ");
+      break;
+      case 3:
+      Serial.print("Wireless Sony DualShock Controller found ");
+      break;
+  }
+
+  Serial.println("Setup Finish");
 }
 
 void loop() {
