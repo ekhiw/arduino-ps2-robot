@@ -1,4 +1,6 @@
 
+#include <PS2X_lib.h>
+
 #define in1 4
 #define in2 5
 #define in3 6
@@ -8,6 +10,18 @@
 #define im2 9
 #define im3 10
 #define im4 11
+
+#define PS2_DAT    17
+#define PS2_CMD    15
+#define PS2_SEL    16
+#define PS2_CLK    14
+#define pressures   false
+#define rumble      true
+PS2X ps2x;
+
+int psError = 0;
+byte psType = 0;
+byte vibrate = 0;
 
 
 void stopAll(){
