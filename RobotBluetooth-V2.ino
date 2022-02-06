@@ -97,8 +97,84 @@ void maju(){
   digitalWrite(in4,LOW);
 }
 
+
+
+void handleBluetooth(){
+    if (Serial1.available() > 0) {
+        char x = Serial1.read();
+        Serial.print(x);
+        if(x == 'F'){
+            maju();
+            delay(80);
+        }
+        if(x == 'R'){
+            kanan();
+            delay(80);
+        }
+        if(x == 'L'){
+            kiri();
+            delay(80);
+        }
+        if(x == 'B'){
+            mundur();
+            delay(80);
+        }
+        if(x == 'S'){
+            stopAll();
+        }
+        if(x == 'H'){
+            serv();
+        }
+        digitalWrite(LED_BUILTIN, HIGH);
+    }else {
+        digitalWrite(LED_BUILTIN, LOW);
+        stopAll();
+    }
+}
+
+void handleStickPs(){
+    ps2x.read_gamepad(false, vibrate); //read controller and set large motor to spin at 'vibrate' speed
+
+    // || ps2x.Analog(PSS_LY) == 0
+    if(ps2x.Button(PSB_PAD_UP)) {
+        Serial.print("PSB_PAD_UP");
+        maju();
+        delay(80);
+    }
+    // || ps2x.Analog(PSS_LX) == 255
+    if(ps2x.Button(PSB_PAD_RIGHT)) {
+        Serial.print("PSB_PAD_RIGHT");
+        kanan();
+        delay(80);
+    }
+    // || ps2x.Analog(PSS_LX) == 0
+    if(ps2x.Button(PSB_PAD_LEFT)) {
+        Serial.print("PSB_PAD_LEFT");
+        kiri();
+        delay(80);
+    }
+    // || ps2x.Analog(PSS_LY) == 255
+    if(ps2x.Button(PSB_PAD_DOWN)) {
+        Serial.print("PSB_PAD_DOWN ");
+        mundur();
+        delay(80);
+    }
+
+    if(ps2x.ButtonReleased(PSB_PAD_UP)
+        || ps2x.ButtonReleased(PSB_PAD_RIGHT)
+        || ps2x.ButtonReleased(PSB_PAD_LEFT)
+        || ps2x.ButtonReleased(PSB_PAD_DOWN) ){
+        Serial.print("stopAll");
+        stopAll();
+    }
+
+    delay(50);
+}
+
 void setup() {
   
+  Serial1.begin(115200);
+  Serial.begin(115200);
   psError = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
 
   if(psError == 0){
